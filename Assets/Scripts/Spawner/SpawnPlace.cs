@@ -1,17 +1,14 @@
 using UnityEngine;
 
 [RequireComponent (typeof(Collider))]
-public class Plane : MonoBehaviour
+public class SpawnPlace : MonoBehaviour
 {
-    [SerializeField] private ResourceSpawner _resourceSpawner;
-
     private Collider _colider;
 
     public Bounds Bounds => _colider.bounds;
 
-    private void Start()
+    private void Awake()
     {
         _colider = GetComponent<Collider>();
-        _resourceSpawner.SetPlace(this);
     }
 }

@@ -1,18 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Resource : MonoBehaviour
+[RequireComponent(typeof(Collider))]
+public class Resource : MonoBehaviour, ISpawnObject
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private Collider _collider;
+
+    private string _occupiedMaskName = "Default";
+    private LayerMask _occupiedMask;
+
+    public bool IsOccupied {  get; private set; }
+    public Vector3 Position => transform.position;
+
+    public Collider Collider => _collider;
+
+    private void Awake()
     {
-        
+        _occupiedMask = LayerMask.NameToLayer(_occupiedMaskName);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Occupy()
     {
-        
+        gameObject.layer = _occupiedMask;
+        IsOccupied = true;
     }
 }
