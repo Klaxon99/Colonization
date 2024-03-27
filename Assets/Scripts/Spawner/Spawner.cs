@@ -8,6 +8,7 @@ public abstract class Spawner<T> : MonoBehaviour where T : MonoBehaviour, ISpawn
 
     public virtual T Spawn()
     {
+        Debug.Log(_spawnPlace);
         T spawnObject = Instantiate(GetSpawnObject());
         Vector3 spawnPositioin = GetFreePlace(spawnObject.Collider);
         spawnObject.transform.position = spawnPositioin;
