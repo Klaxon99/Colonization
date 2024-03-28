@@ -12,6 +12,7 @@ public class Unit : MonoBehaviour, ISpawnObject
     public event Action<Unit> Freed;
 
     private Base _base;
+    private ResourceCollector _resourceCollector;
     private MoveState _moveState;
     private StateMachine _stateMachine;
     private UnitHand _hand;
@@ -39,6 +40,12 @@ public class Unit : MonoBehaviour, ISpawnObject
         _hand.ResourceDropped -= OnDropped;
     }
 
+    public void Init(Base unitBase, ResourceCollector resourceCollector)
+    {
+        _base = unitBase;
+        _resourceCollector = resourceCollector;
+    }
+
     public void CollectResource(Resource resource)
     {
         resource.Occupy();
@@ -54,12 +61,12 @@ public class Unit : MonoBehaviour, ISpawnObject
 
     private void OnSelected()
     {
-        MoveTargetPosition = _base.transform.position;
+        MoveTargetPosition = _base.Position;
     }
 
     private void OnDropped()
     {
-        _base.AcceptResource(TargetResource);
+        _resourceCollector.TakeResource(TargetResource);
         Freed?.Invoke(this);
     }
 }

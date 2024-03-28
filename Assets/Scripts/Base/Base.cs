@@ -4,16 +4,12 @@ using UnityEngine;
 [RequireComponent(typeof(ResourceCounter))]
 public class Base : MonoBehaviour
 {
-    private ResourceCounter _resourceCounter;
+    private Transform _transform;
+
+    public Vector3 Position => _transform.position;
 
     private void Start()
     {
-        _resourceCounter = GetComponent<ResourceCounter>();
-    }
-
-    public void AcceptResource(Resource resource)
-    {
-        _resourceCounter.Add();
-        Destroy(resource.gameObject);
+        _transform = GetComponent<Transform>();
     }
 }

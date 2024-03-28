@@ -3,12 +3,14 @@ using UnityEngine;
 
 [RequireComponent(typeof(Base))]
 [RequireComponent(typeof(UnitSpawner))]
+[RequireComponent(typeof(ResourceCollector))]
 public class UnitsStorage : MonoBehaviour
 {
     [SerializeField] private int _initialUnitCount;
 
     private Queue<Unit> _freeUnitsQueue;
     private Base _base;
+    private ResourceCollector _resourceCollector;
     private UnitSpawner _unitSpawner;
 
     public bool HasFreeUnit => _freeUnitsQueue.Count > 0;
@@ -23,6 +25,7 @@ public class UnitsStorage : MonoBehaviour
         _base = GetComponent<Base>();
         _unitSpawner = GetComponent<UnitSpawner>();
         _freeUnitsQueue = new Queue<Unit>();
+        _resourceCollector = GetComponent<ResourceCollector>();
     }
 
     public Unit GetFreeUnit()
@@ -47,6 +50,7 @@ public class UnitsStorage : MonoBehaviour
     private void CreateUnit()
     {
         Unit unit = _unitSpawner.Spawn();
+        unit.Init(_base, _resourceCollector);
         LinkUnit(unit);
         _freeUnitsQueue.Enqueue(unit);
     }
