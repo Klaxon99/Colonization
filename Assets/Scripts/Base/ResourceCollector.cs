@@ -17,8 +17,6 @@ public class ResourceCollector : MonoBehaviour
         _resourceScaner = GetComponent<ResourceScaner>();
         _resourceCounter = GetComponent<ResourceCounter>();
         _unitsStorage = GetComponent<UnitsStorage>();
-
-        Run();
     }
 
     public void Run()

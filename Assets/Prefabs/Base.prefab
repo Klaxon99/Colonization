@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 106593618}
   - component: {fileID: 106593620}
   - component: {fileID: 106593619}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 1763562570}
   - component: {fileID: 1763562569}
   - component: {fileID: 1763562572}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -270,7 +270,10 @@ GameObject:
   - component: {fileID: 7957188731535871793}
   - component: {fileID: 1656206961}
   - component: {fileID: 1656206962}
-  m_Layer: 0
+  - component: {fileID: 3282507153270773070}
+  - component: {fileID: 6266219782386300426}
+  - component: {fileID: 5594623512249698304}
+  m_Layer: 7
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -424,6 +427,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9f3bf916104f644ead052024ef5ff5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _unitCost: 3
+  _baseCost: 5
 --- !u!114 &1656206961
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -449,6 +454,47 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initialUnitCount: 1
+--- !u!114 &3282507153270773070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2953495085970243411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e4dce46c98660c4abebb249ea282bef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _baseState: {fileID: 5594623512249698304}
+--- !u!114 &6266219782386300426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2953495085970243411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a29941240fb3f0e4a85a64715b0ecee1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _transitions: []
+  _stateMachine: {fileID: 3282507153270773070}
+--- !u!114 &5594623512249698304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2953495085970243411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 610ca4e80601e9f4895cc09b8bfb5ff3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _transitions: []
+  _stateMachine: {fileID: 3282507153270773070}
 --- !u!1 &4115377982546231242
 GameObject:
   m_ObjectHideFlags: 0
@@ -461,7 +507,7 @@ GameObject:
   - component: {fileID: 5705070831540912753}
   - component: {fileID: 8606840637764412299}
   - component: {fileID: 1629048436}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BaseZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}

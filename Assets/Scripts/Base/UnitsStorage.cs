@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,12 +9,15 @@ public class UnitsStorage : MonoBehaviour
 {
     [SerializeField] private int _initialUnitCount;
 
+    public event Action<Unit> UnitFreed;
+
     private Queue<Unit> _freeUnitsQueue;
     private Base _base;
     private ResourceCollector _resourceCollector;
     private UnitSpawner _unitSpawner;
 
     public bool HasFreeUnit => _freeUnitsQueue.Count > 0;
+    public int Count => _freeUnitsQueue.Count;
 
     private void Start()
     {
@@ -28,9 +32,36 @@ public class UnitsStorage : MonoBehaviour
         _resourceCollector = GetComponent<ResourceCollector>();
     }
 
+    public void CreateUnit()
+    {
+        Unit unit = _unitSpawner.Spawn();
+        unit.Init(_base, _resourceCollector);
+        _freeUnitsQueue.Enqueue(unit);
+        Add(unit);
+    }
+
+    public void Add(Unit unit)
+    {
+        LinkUnit(unit);
+    }
+
     public Unit GetFreeUnit()
     {
         return _freeUnitsQueue.Dequeue();
+    }
+
+    public Unit GiveUnit()
+    {
+        if (_freeUnitsQueue.Count > 0)
+        {
+            Unit unit = _freeUnitsQueue.Dequeue();
+
+            unit.Freed -= OnFreed;
+
+            return unit;
+        }
+
+        return null;
     }
 
     public void LinkUnit(Unit unit)
@@ -47,16 +78,9 @@ public class UnitsStorage : MonoBehaviour
         }
     }
 
-    private void CreateUnit()
-    {
-        Unit unit = _unitSpawner.Spawn();
-        unit.Init(_base, _resourceCollector);
-        LinkUnit(unit);
-        _freeUnitsQueue.Enqueue(unit);
-    }
-
     private void OnFreed(Unit unit)
     {
         _freeUnitsQueue.Enqueue(unit);
+        UnitFreed?.Invoke(unit);
     }
 }

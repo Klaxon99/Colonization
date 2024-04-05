@@ -13,13 +13,8 @@ public class StateMachine : MonoBehaviour
 
     public void SwitchState(State state)
     {
-        if (state == null)
-        {
-            _currentState = _baseState;
-        }
-
         _currentState?.Exit();
-        _currentState = state;
+        _currentState = state == null ? _baseState : state;
         _currentState.Enter();
     }
 }

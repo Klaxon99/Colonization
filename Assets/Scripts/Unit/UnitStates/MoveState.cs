@@ -13,7 +13,7 @@ public class MoveState : State
     {
         _mover = GetComponent<Mover>();
         _unit = GetComponent<Unit>();
-        _contactDistance = GetComponent<UnitHand>().Height;
+        _contactDistance = GetComponent<UnitHand>().Length;
     }
 
     private void Update()

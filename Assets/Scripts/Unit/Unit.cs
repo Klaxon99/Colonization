@@ -1,10 +1,10 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(MoveState))]
 [RequireComponent (typeof(UnitHand))]
 [RequireComponent (typeof(StateMachine))]
-[RequireComponent (typeof(IdleState))]
+[RequireComponent(typeof(MoveState))]
+[RequireComponent (typeof(BuildUnitState))]
 public class Unit : MonoBehaviour, ISpawnObject
 {
     [SerializeField] private Collider _collider;
@@ -18,8 +18,10 @@ public class Unit : MonoBehaviour, ISpawnObject
     private UnitHand _hand;
 
     public Collider Collider => _collider;
+    public Base Base => _base;
     public Resource TargetResource { get; private set; }
     public Vector3 MoveTargetPosition {  get; private set; }
+    public BaseFlag BaseFlag { get; private set; }
 
     private void Awake()
     {
@@ -30,14 +32,22 @@ public class Unit : MonoBehaviour, ISpawnObject
 
     private void OnEnable()
     {
-        _hand.ResourceSelected += OnSelected;
-        _hand.ResourceDropped += OnDropped;
+        _hand.ResourceSelected += OnSelectedResource;
+        _hand.ResourceDropped += OnDroppedResource;
     }
 
     private void OnDisable()
     {
-        _hand.ResourceSelected -= OnSelected;
-        _hand.ResourceDropped -= OnDropped;
+        _hand.ResourceSelected -= OnSelectedResource;
+        _hand.ResourceDropped -= OnDroppedResource;
+    }
+
+    public void BuildBase(BaseFlag baseFlag)
+    {
+        BaseFlag = baseFlag;
+        MoveTargetPosition = BaseFlag.Position;
+        _stateMachine.SwitchState(_moveState);
+        _hand.BaseBuilded += OnBaseBuilded;
     }
 
     public void Init(Base unitBase, ResourceCollector resourceCollector)
@@ -59,14 +69,21 @@ public class Unit : MonoBehaviour, ISpawnObject
         _base = newBase;
     }
 
-    private void OnSelected()
+    private void OnBaseBuilded()
+    {
+        BaseFlag = null;
+        _hand.BaseBuilded -= OnBaseBuilded;
+    }
+
+    private void OnSelectedResource()
     {
         MoveTargetPosition = _base.Position;
     }
 
-    private void OnDropped()
+    private void OnDroppedResource()
     {
         _resourceCollector.TakeResource(TargetResource);
+        TargetResource = null;
         Freed?.Invoke(this);
     }
 }

@@ -1,8 +1,12 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class InputHandler : MonoBehaviour
 {
+    public event Action<Vector3> Clicked;
+    public event Action<Base> ClickedOnBase;
+
     private Input _playerInput;
 
     private void Awake()
@@ -10,11 +14,6 @@ public class InputHandler : MonoBehaviour
         _playerInput = new Input();
 
         _playerInput.Player.Click.performed += OnClick;
-    }
-
-    private void OnClick(InputAction.CallbackContext context)
-    {
-        Debug.Log(1);
     }
 
     private void OnEnable()
@@ -25,5 +24,25 @@ public class InputHandler : MonoBehaviour
     private void OnDisable()
     {
         _playerInput.Disable();
+    }
+
+    private void OnClick(InputAction.CallbackContext context)
+    {
+        Vector2 mouseClickPosition = _playerInput.Player.MouseMove.ReadValue<Vector2>();
+
+        Ray ray = Camera.main.ScreenPointToRay(mouseClickPosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hitInfo))
+        {
+            if (hitInfo.collider != null)
+            {
+                Clicked?.Invoke(hitInfo.point);
+
+                if (hitInfo.collider.TryGetComponent(out Base unitBase))
+                {
+                    ClickedOnBase?.Invoke(unitBase);
+                }
+            }
+        }
     }
 }
