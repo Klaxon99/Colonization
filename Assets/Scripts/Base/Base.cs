@@ -5,19 +5,22 @@ using UnityEngine;
 [RequireComponent(typeof(BuildBaseState))]
 [RequireComponent(typeof(CreateUnitBaseState))]
 [RequireComponent(typeof(UnitsStorage))]
+[RequireComponent(typeof(ResourceCollector))]
 public class Base : MonoBehaviour, ISpawnObject
 {
-    private Transform _transform;
-    private StateMachine _stateMachine;
-    private CreateUnitBaseState _createUnitBaseState;
-    private BuildBaseState _buildBaseState;
     private Collider _collider;
     private BaseFlag _baseFlag;
+    private Transform _transform;
+    private StateMachine _stateMachine;
     private UnitsStorage _unitsStorage;
+    private BuildBaseState _buildBaseState;
+    private CreateUnitBaseState _createUnitBaseState;
 
     public Vector3 Position => _transform.position;
     public BaseFlag BaseFlag => _baseFlag;
     public Collider Collider => _collider;
+    public bool CanBuild => BaseFlag == null;
+    public BaseSpawner BaseSpawner {  get; private set; }
 
     private void Awake()
     {
@@ -34,8 +37,9 @@ public class Base : MonoBehaviour, ISpawnObject
         _unitsStorage.Add(unit);
     }
 
-    public void Build(BaseFlag baseFlag)
+    public void Build(BaseFlag baseFlag, BaseSpawner baseSpawner)
     {
+        BaseSpawner = baseSpawner;
         _baseFlag = baseFlag;
         _stateMachine.SwitchState(_buildBaseState);
     }

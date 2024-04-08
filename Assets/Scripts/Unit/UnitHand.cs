@@ -8,8 +8,6 @@ public class UnitHand : MonoBehaviour
     [SerializeField] private float _length;
     [SerializeField] private Base _basePrefab;
 
-    public bool IsSelected {  get; private set; }
-
     public event Action ResourceSelected;
     public event Action ResourceDropped;
     public event Action BaseBuilded;
@@ -33,7 +31,6 @@ public class UnitHand : MonoBehaviour
             resource.SetParent(transform);
             resource.localPosition = new Vector3(0, Length, Length);
             ResourceSelected?.Invoke();
-            IsSelected = true;
         }
     }
 
@@ -50,17 +47,18 @@ public class UnitHand : MonoBehaviour
     public void DropResource()
     {
         _unit.TargetResource.transform.SetParent(null);
-        IsSelected = false;
         ResourceDropped?.Invoke();
     }
 
     public void BuildBase()
     {
-        Debug.Log("spawn");
-        /*Vector3 spawnPosition = _unit.Base.BaseFlag.Position;
-        Base newBase = _baseSpawner.Spawn(spawnPosition);
+        Vector3 spawnPosition = _unit.Base.BaseFlag.Position;
+        float spawnHeight = 0.07f;
+        spawnPosition.y += spawnHeight;
 
+        Base newBase = _unit.Base.BaseSpawner.Spawn(spawnPosition);
+        _unit.Base.BaseFlag.gameObject.SetActive(false);
         newBase.TakeUnit(_unit);
-        _unit.SetBase(newBase);*/
+        BaseBuilded?.Invoke();
     }
 }

@@ -2,13 +2,13 @@ using UnityEngine;
 
 [RequireComponent(typeof(Base))]
 [RequireComponent(typeof(UnitsStorage))]
-[RequireComponent(typeof(ResourceCollector))]
 [RequireComponent(typeof(ResourceCounter))]
+[RequireComponent(typeof(ResourceCollector))]
 public class BuildBaseState : State
 {
     private Base _base;
-    private UnitsStorage _unitsStorage;
     private ResourceCollector _resourceCollector;
+    private UnitsStorage _unitsStorage;
     private ResourceCounter _resourceCounter;
     private Unit _builder;
 
@@ -16,8 +16,8 @@ public class BuildBaseState : State
     {
         _base = GetComponent<Base>();
         _unitsStorage = GetComponent<UnitsStorage>();
-        _resourceCollector = GetComponent<ResourceCollector>();
         _resourceCounter = GetComponent<ResourceCounter>();
+        _resourceCollector = GetComponent<ResourceCollector>();
     }
 
     private void OnEnable()
@@ -43,7 +43,6 @@ public class BuildBaseState : State
 
         if (_unitsStorage.HasFreeUnit)
         {
-            //Не давать юнита, если у базы небольше одного юнита
             SendUnit(_unitsStorage.GiveUnit());
         }
         else
@@ -56,13 +55,19 @@ public class BuildBaseState : State
     {
         _builder = unit;
         _builder.BuildBase(_base.BaseFlag);
-        Debug.Log(unit);
+        _resourceCounter.BuyBase();
+        _builder.BaseBuilded += OnBaseBuilded;
+    }
+
+    private void OnBaseBuilded()
+    {
         SwitchState();
     }
 
-    private void OnUnitFreed(Unit unit)
+    private void OnUnitFreed()
     {
-        SendUnit(unit);
-        _builder.Freed -= OnUnitFreed;
+        SendUnit(_unitsStorage.GiveUnit());
+        _unitsStorage.UnitFreed -= OnUnitFreed;
+        _resourceCollector.Run();
     }
 }

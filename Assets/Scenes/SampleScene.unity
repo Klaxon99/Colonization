@@ -722,7 +722,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spawnPlace: {fileID: 2049500123}
   _resource: {fileID: -2639141511130452503, guid: e417809c8c326884eb13f43eb9124630, type: 3}
-  _spawnDelay: 3
+  _spawnDelay: 1
 --- !u!114 &2049500123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -840,6 +840,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1656206962, guid: adf9457f7ab5ddb46af92b4c193b04d1, type: 3}
+      propertyPath: _initialUnitCount
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2953495085970243411, guid: adf9457f7ab5ddb46af92b4c193b04d1, type: 3}
       propertyPath: m_Name
       value: Base
@@ -854,7 +858,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2953495085970243415, guid: adf9457f7ab5ddb46af92b4c193b04d1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.2
+      value: 0.07
       objectReference: {fileID: 0}
     - target: {fileID: 2953495085970243415, guid: adf9457f7ab5ddb46af92b4c193b04d1, type: 3}
       propertyPath: m_LocalPosition.z

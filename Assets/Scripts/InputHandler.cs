@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class InputHandler : MonoBehaviour
 {
-    public event Action<Vector3> Clicked;
+    public event Action<Vector3> ClickedOnSpawnPlace;
     public event Action<Base> ClickedOnBase;
 
     private Input _playerInput;
@@ -36,7 +36,10 @@ public class InputHandler : MonoBehaviour
         {
             if (hitInfo.collider != null)
             {
-                Clicked?.Invoke(hitInfo.point);
+                if (hitInfo.collider.TryGetComponent(out SpawnPlace spawnPlace))
+                {
+                    ClickedOnSpawnPlace?.Invoke(hitInfo.point);
+                }
 
                 if (hitInfo.collider.TryGetComponent(out Base unitBase))
                 {

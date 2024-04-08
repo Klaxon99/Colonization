@@ -34,12 +34,12 @@ public class ResourceCounter : MonoBehaviour
     {
         Count++;
 
-        if (Count == _unitCost)
+        if (Count >= _unitCost)
         {
             AccumulatedUnitCost?.Invoke();
         }
 
-        if (Count == _baseCost)
+        if (Count >= _baseCost)
         {
             AccumulatedBaseCost?.Invoke();
         }

@@ -17,12 +17,15 @@ public class BaseBuilder : MonoBehaviour
     private void OnEnable()
     {
         _inputHandler.ClickedOnBase += OnBaseClick;
-        _inputHandler.Clicked += OnSpawnPlaceClick;
+        _inputHandler.ClickedOnSpawnPlace += OnSpawnPlaceClick;
     }
 
     private void OnBaseClick(Base unitBase)
     {
-        _creatingBase = unitBase;
+        if (unitBase.CanBuild)
+        {
+            _creatingBase = unitBase;
+        }
     }
 
     private void OnSpawnPlaceClick(Vector3 position)
@@ -32,7 +35,7 @@ public class BaseBuilder : MonoBehaviour
             if (_baseSpawner.CanSpawn(position, _creatingBase.Collider))
             {
                 BaseFlag flag = Instantiate(_baseFlag, position, Quaternion.identity);
-                _creatingBase.Build(flag);
+                _creatingBase.Build(flag, _baseSpawner);
                 _creatingBase = null;
             }
         }

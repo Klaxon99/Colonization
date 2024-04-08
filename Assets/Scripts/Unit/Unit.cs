@@ -3,50 +3,49 @@ using UnityEngine;
 
 [RequireComponent (typeof(UnitHand))]
 [RequireComponent (typeof(StateMachine))]
-[RequireComponent(typeof(MoveState))]
+[RequireComponent(typeof(TakeResourceState))]
 [RequireComponent (typeof(BuildUnitState))]
 public class Unit : MonoBehaviour, ISpawnObject
 {
     [SerializeField] private Collider _collider;
 
     public event Action<Unit> Freed;
+    public event Action BaseBuilded;
 
     private Base _base;
-    private ResourceCollector _resourceCollector;
-    private MoveState _moveState;
-    private StateMachine _stateMachine;
     private UnitHand _hand;
+    private StateMachine _stateMachine;
+    private BuildUnitState _buildUnitState;
+    private ResourceCollector _resourceCollector;
+    private TakeResourceState _takeResourceState;
 
     public Collider Collider => _collider;
     public Base Base => _base;
     public Resource TargetResource { get; private set; }
-    public Vector3 MoveTargetPosition {  get; private set; }
     public BaseFlag BaseFlag { get; private set; }
 
     private void Awake()
     {
-        _moveState = GetComponent<MoveState>();
         _stateMachine = GetComponent<StateMachine>();
         _hand = GetComponent<UnitHand>();
+        _buildUnitState = GetComponent<BuildUnitState>();
+        _takeResourceState = GetComponent<TakeResourceState>();
     }
 
     private void OnEnable()
     {
-        _hand.ResourceSelected += OnSelectedResource;
         _hand.ResourceDropped += OnDroppedResource;
     }
 
     private void OnDisable()
     {
-        _hand.ResourceSelected -= OnSelectedResource;
         _hand.ResourceDropped -= OnDroppedResource;
     }
 
     public void BuildBase(BaseFlag baseFlag)
     {
         BaseFlag = baseFlag;
-        MoveTargetPosition = BaseFlag.Position;
-        _stateMachine.SwitchState(_moveState);
+        _stateMachine.SwitchState(_buildUnitState);
         _hand.BaseBuilded += OnBaseBuilded;
     }
 
@@ -60,8 +59,7 @@ public class Unit : MonoBehaviour, ISpawnObject
     {
         resource.Occupy();
         TargetResource = resource;
-        MoveTargetPosition = resource.transform.position;
-        _stateMachine.SwitchState(_moveState);
+        _stateMachine.SwitchState(_takeResourceState);
     }
 
     public void SetBase(Base newBase)
@@ -73,11 +71,7 @@ public class Unit : MonoBehaviour, ISpawnObject
     {
         BaseFlag = null;
         _hand.BaseBuilded -= OnBaseBuilded;
-    }
-
-    private void OnSelectedResource()
-    {
-        MoveTargetPosition = _base.Position;
+        BaseBuilded?.Invoke();
     }
 
     private void OnDroppedResource()
